@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 class NoteStore:
+
     def __init__(self, path: str) -> None:
         self._path = path
         self._notes: Dict[str, Note] = {}
@@ -29,6 +30,26 @@ class NoteStore:
         del self._notes[id]
         self._save()
         return True
+
+    def search(self, query: str) -> List[Note]:
+        q = query.lower()
+        return [
+            n for n in self._notes.values()
+            if q in n.title.lower() or q in n.content.lower()
+        ]
+
+    def filter_by_tag(self, tag: str) -> List[Note]:
+        return [n for n in self._notes.values() if tag in n.tags]
+
+    def filter_by_date(
+        self,
+        since: datetime,
+        until: Optional[datetime] = None,
+    ) -> List[Note]:
+        results = [n for n in self._notes.values() if n.created_at >= since]
+        if until is not None:
+            results = [n for n in results if n.created_at <= until]
+        return results
 
     def _save(self) -> None:
         data = {
