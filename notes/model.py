@@ -14,3 +14,16 @@ class Note:
 
     def __repr__(self) -> str:
         return f"Note(id={self.id!r}, title={self.title!r})"
+
+    def add_tag(self, tag: str) -> None:
+        normalised = tag.strip().lower()
+        if normalised not in self.tags:
+            self.tags.append(normalised)
+
+    def remove_tag(self, tag: str) -> None:
+        normalised = tag.strip().lower()
+        if normalised in self.tags:
+            self.tags.remove(normalised)
+
+    def has_tag(self, tag: str) -> bool:
+        return tag.strip().lower() in self.tags
